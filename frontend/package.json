@@ -107,9 +107,6 @@
     "extract-messages": "i18next-scanner --config=internals/extractMessages/i18next-scanner.config.js",
     "format": "./node_modules/.bin/prettier --config .prettierrc --write \"src/**/*.{js,jsx,ts,tsx,css,json}\"",
     "build:api-file": "./node_modules/.bin/openapi-generator-cli generate -i src/api/openapi.json -g typescript-axios -o src/api",
-    "docker:build": "docker image build . -t $npm_package_config_imageRepo:$npm_package_version -t $npm_package_config_imageRepo:latest",
-    "docker:push": "docker image push $npm_package_config_imageRepo --all-tags",
-    "restart:k8s": "kubectl rollout restart deployment zetomap-webapp"
   },
   "eslintConfig": {
     "extends": "react-app"
