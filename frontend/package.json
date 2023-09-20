@@ -2,9 +2,6 @@
   "name": "zetomap",
   "version": "0.2.0",
   "license": "SEE LICENSE file",
-  "config": {
-    "imageRepo": "docker.arty.scai.fraunhofer.de/zetomap-frontend"
-  },
   "private": true,
   "dependencies": {
     "@antv/graphin": "2.6.0",
