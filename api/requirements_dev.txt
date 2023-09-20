@@ -1,0 +1,8 @@
+fastapi==0.101.1
+uvicorn==0.23.2
+pandas==2.0.3
+sqlalchemy==2.0.20
+sqlalchemy_utils==0.41.1
+openpyxl==3.1.2
+tqdm==4.66.1
+ebel_rest==1.0.25

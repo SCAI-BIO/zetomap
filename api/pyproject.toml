@@ -1,0 +1,46 @@
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "zetomapapi"
+version = "0.1.0"
+description = "API for the ZETOMAP Graph Visualizer."
+authors = ["Bruce Schultz <bruce.schultz@scai.fraunhofer.de>"]
+maintainers = ["Bruce Schultz <bruce.schultz@scai.fraunhofer.de>"]
+license = "MIT"
+repository = "https://gitlab.scai.fraunhofer.de/biodev/components/backend/zetomap-api"
+readme = "README.md"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+keywords = ["Biomedical Database"]
+requires-python = '>=3.10'
+
+[tool.poetry.dependencies]
+fastapi = "^0.101.1"
+uvicorn = "^0.23.2"
+pandas = "^2.0.3"
+sqlalchemy = "^2.0.20"
+sqlalchemy_utils = "^0.41.1"
+openpyxl = "^3.1.2"
+tqdm = "^4.66.1"
+ebel_rest = "^1.0.25"
+
+[project.urls]
+repository = "https://gitlab.scai.fraunhofer.de/biodev/components/backend/zetomap-api"
+
+[tool.poetry.scripts]
+zetomap = "zetomapapi.cli:main"

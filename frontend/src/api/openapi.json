@@ -1,0 +1,767 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "API for the ZET-O-MAP Graph Viewer",
+        "description": "A set of methods for retrieving data for visualizing in the ZET-O-MAP GUI.",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/results/base": {
+            "get": {
+                "tags": [
+                    "Query"
+                ],
+                "summary": "Get Base Graph",
+                "description": "Return the base/starting graph for a given keyword. If no keyword is given, returns links to all resources.",
+                "operationId": "get_base_graph_results_base_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/results/compounds": {
+            "get": {
+                "tags": [
+                    "Query"
+                ],
+                "summary": "Get Compounds",
+                "description": "Return a list of compounds in the database for which there is experimental data.",
+                "operationId": "get_compounds_results_compounds_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/Compound"
+                                    },
+                                    "type": "array",
+                                    "title": "Response Get Compounds Results Compounds Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/results/{node_id}": {
+            "get": {
+                "tags": [
+                    "Query"
+                ],
+                "summary": "Get Next Nodes",
+                "description": "Return the next nodes of the given node rID.\n\nParameters\n----------\nnode_id :  str\n    ID of node in graph.\n\nReturns\n-------\ndict\n    List of node IDs coming out of given node ID.",
+                "operationId": "get_next_nodes_results__node_id__get",
+                "parameters": [
+                    {
+                        "name": "node_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Node Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/predict/omics/{compound_id}": {
+            "get": {
+                "tags": [
+                    "Predict"
+                ],
+                "summary": "Get Omics Kes And Aops",
+                "description": "Get the predicted AOP & KeyEvent nodes and edges using the gene expression data for a given compound.\n\nParameters\n----------\ncompound_id : str\n    ID of compound used in the database: 1 = Valproic Acid, 2 = Triadimefon\n\nlimit : int\n    Number of AOPs to limit the results to\n\nReturns\n-------\ndict\n    Nodes and edges of the associated KEs and AOPs.",
+                "operationId": "get_omics_kes_and_aops_predict_omics__compound_id__get",
+                "parameters": [
+                    {
+                        "name": "compound_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Compound Id"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 5,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/predict/pcr/{compound_id}": {
+            "get": {
+                "tags": [
+                    "Predict"
+                ],
+                "summary": "Get Pcr Kes And Aops",
+                "description": "Get the predicted AOP & KeyEvent nodes and edges using the PCR results of a given compound.\n\nParameters\n----------\ncompound_id :  str\n    ID of compound used in the database: 2 = VPA, 3 = Chlorpyrifos, 4 = Tridimefon\n\nconcentration : str\n    Concentration of the compound used. If none provided, returns all data for all concentrations tested.\n\nlimit : int\n    Number of AOPs to limit the results to\n\nReturns\n-------\ndict\n    Nodes and edges of the associated KEs and AOPs.",
+                "operationId": "get_pcr_kes_and_aops_predict_pcr__compound_id__get",
+                "parameters": [
+                    {
+                        "name": "compound_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Compound Id"
+                        }
+                    },
+                    {
+                        "name": "concentration",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ],
+                            "title": "Concentration"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 5,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/predict/genes": {
+            "post": {
+                "tags": [
+                    "Predict"
+                ],
+                "summary": "Get Kes And Aops From Gene List",
+                "description": "Get the predicted AOP & KeyEvent nodes and edges a list of porvided genes.\n\nParameters\n----------\ngene_dict :  Genes\n    Dict of genes to use for prediction.\n\nlimit : str\n    Number of AOPs to limit the results to\n\nReturns\n-------\ndict\n    Nodes and edges of the associated KEs and AOPs.",
+                "operationId": "get_kes_and_aops_from_gene_list_predict_genes_post",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 5,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Genes"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exp/{ke_node_id}": {
+            "get": {
+                "tags": [
+                    "Experiment"
+                ],
+                "summary": "Get Exp Genes",
+                "description": "Return the experimentally significant genes that are also associated with the given Key Event node ID.\n\nParameters\n----------\nke_node_id :  str\n    Key Event ID of node in graph.\n\nReturns\n-------\ndict\n    Table of experimental evidence for associated genes.",
+                "operationId": "get_exp_genes_exp__ke_node_id__get",
+                "parameters": [
+                    {
+                        "name": "ke_node_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ],
+                            "title": "Ke Node Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExpResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kes/{aop_node_id}": {
+            "get": {
+                "tags": [
+                    "Query"
+                ],
+                "summary": "Get Aop Kes",
+                "description": "Return a list of KEs for a given AOP ID.\n\nParameters\n----------\naop_node_id : str\n    AOP ID of node in graph.\n\nReturns\n-------\ndict\n    List of associated KEs.",
+                "operationId": "get_aop_kes_kes__aop_node_id__get",
+                "parameters": [
+                    {
+                        "name": "aop_node_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ],
+                            "title": "Aop Node Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AopKeyEvents"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/predict/sensitive/{compound_id}": {
+            "get": {
+                "tags": [
+                    "Predict"
+                ],
+                "summary": "Get Sensitive Kes And Aops",
+                "description": "Get the predicted AOP & KeyEvent nodes and edges using the sensitive gene list of a given compound.\n\nParameters\n----------\ncompound_id :  str\n    ID of compound used in the database: 1 = Chlorpyrifos, 2 = Triadimefon, 3 = VPA\n\nlimit : int\n    Number of AOPs to limit the results to\n\nReturns\n-------\ndict\n    Nodes and edges of the associated KEs and AOPs.",
+                "operationId": "get_sensitive_kes_and_aops_predict_sensitive__compound_id__get",
+                "parameters": [
+                    {
+                        "name": "compound_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Compound Id"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 5,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AopKeyEvents": {
+                "properties": {
+                    "kes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Kes"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "kes"
+                ],
+                "title": "AopKeyEvents"
+            },
+            "BaseResponse": {
+                "properties": {
+                    "nodes": {
+                        "items": {
+                            "$ref": "#/components/schemas/Node"
+                        },
+                        "type": "array",
+                        "title": "Nodes"
+                    },
+                    "edges": {
+                        "items": {
+                            "$ref": "#/components/schemas/Edge"
+                        },
+                        "type": "array",
+                        "title": "Edges"
+                    },
+                    "ke_gene_data": {
+                        "anyOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Ke Gene Data"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "nodes",
+                    "edges",
+                    "ke_gene_data"
+                ],
+                "title": "BaseResponse"
+            },
+            "Compound": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "title": "Compound"
+            },
+            "Edge": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "source": {
+                        "type": "string",
+                        "title": "Source"
+                    },
+                    "target": {
+                        "type": "string",
+                        "title": "Target"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "source",
+                    "target"
+                ],
+                "title": "Edge"
+            },
+            "ExpResponse": {
+                "properties": {
+                    "tested": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Tested"
+                    },
+                    "exp": {
+                        "items": {
+                            "$ref": "#/components/schemas/ExpResult"
+                        },
+                        "type": "array",
+                        "title": "Exp"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "tested",
+                    "exp"
+                ],
+                "title": "ExpResponse"
+            },
+            "ExpResult": {
+                "properties": {
+                    "compound": {
+                        "type": "string",
+                        "title": "Compound"
+                    },
+                    "ensembl": {
+                        "type": "string",
+                        "title": "Ensembl"
+                    },
+                    "log2fc": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Log2Fc"
+                    },
+                    "pvalue": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Pvalue"
+                    },
+                    "padj": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Padj"
+                    },
+                    "zfinid": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Zfinid"
+                    },
+                    "zfin": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Zfin"
+                    },
+                    "key": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Key"
+                    },
+                    "timepoint": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Timepoint"
+                    },
+                    "concentration": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Concentration"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "compound",
+                    "ensembl",
+                    "log2fc",
+                    "pvalue",
+                    "padj",
+                    "zfinid",
+                    "zfin",
+                    "key",
+                    "timepoint",
+                    "concentration"
+                ],
+                "title": "ExpResult"
+            },
+            "Genes": {
+                "properties": {
+                    "genes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Genes"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "genes"
+                ],
+                "title": "Genes"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "Node": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "node_type": {
+                        "type": "string",
+                        "title": "Node Type"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "node_type",
+                    "name"
+                ],
+                "title": "Node"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Query",
+            "description": "Methods for querying the database."
+        },
+        {
+            "name": "Experiment",
+            "description": "Methods for gathering experimental data."
+        },
+        {
+            "name": "Predict",
+            "description": "Methods for predicting associations."
+        }
+    ]
+}
